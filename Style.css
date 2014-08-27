@@ -1,0 +1,52 @@
+/* Main page */
+.content {
+    color: rgb(187,187,187);
+    background-color: rgb(  0,  0,  0);
+    line-height: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+    margin: 0 auto;
+    padding: 0 0 3ex 0;
+    min-width: 600px;
+    max-width: 1200px;
+    font-size: 24px;
+/*    font-family: "細明體", "AR PL UMing TW", "Inconsolata", "LiSongPro", monospace;*/
+    font-family: "文泉驛等寬正黑", "AR PL UMING TW", "細明體", "mingliu", "Courier", "monospace"; 
+}
+
+.ansi_group {
+    white-space: normal;
+}
+
+/* Color setting - foreground*/
+.c30 {color: rgb(  0,  0,  0);}
+.c31 {color: rgb(153,  0,  0);}
+.c32 {color: rgb(  0,153,  0);}
+.c33 {color: rgb(153,153,  0);}
+.c34 {color: rgb(  0,  0,153);}
+.c35 {color: rgb(153,  0,153);}
+.c36 {color: rgb(  0,153,153);}
+.c37 {color: rgb(153,153,153);}
+/* Color setting - background*/
+.c40 {background-color: rgb(  0,  0,  0);}
+.c41 {background-color: rgb(187,  0,  0);}
+.c42 {background-color: rgb(  0,187,  0);}
+.c43 {background-color: rgb(187,187,  0);}
+.c44 {background-color: rgb(  0,  0,187);}
+.c45 {background-color: rgb(187,  0,187);}
+.c46 {background-color: rgb(  0,187,187);}
+.c47 {background-color: rgb(187,187,187);}
+/* Color setting - highlighted foreground*/
+.c1  {color: rgb(255,255,255);}
+.c90 {color: rgb(102,102,102);}
+.c91 {color: rgb(255,102,102);}
+.c92 {color: rgb(102,255,102);}
+.c93 {color: rgb(255,255,102);}
+.c94 {color: rgb(102,102,255);}
+.c95 {color: rgb(255,102,255);}
+.c96 {color: rgb(102,255,255);}
+.c97 {color: rgb(255,255,255);}
+
+/* Font decoration */
+.ul {text-decoration: underline;}
