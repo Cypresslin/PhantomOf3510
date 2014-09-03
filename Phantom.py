@@ -39,7 +39,8 @@ pattern = {
     'fg': re.compile('(?<!\d)3\d'),      # Foreground color
     'bg': re.compile('(?<!\d)4\d'),      # Background color
     'ul': re.compile('[\[;m]4[\[;m]'),   # Underline
-    'hl': re.compile('[\[;m]1[\[;m]')}   # Highlight
+    'hl': re.compile('[\[;m]1[\[;m]'),   # Highlight
+    'dk': re.compile('[\[;m]0[\[;m]')}   # Darken
 
 
 HEADER = """
@@ -85,6 +86,8 @@ def ctranslator(text):
             css_class += lookup[int(fgcolor.group(0)) + 60]
         else:        # highlight only
             css_class += 'c1'
+    elif pattern['dk'].search(text) and not fgcolor: # darken only
+        css_class += 'c30'
     elif fgcolor:  # not highlighted
         css_class += lookup[fgcolor]
     # Dealing with underline
