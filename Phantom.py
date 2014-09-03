@@ -101,6 +101,8 @@ HTML = ""
 parser = argparse.ArgumentParser(description=
                                  'Phantom of 35.10, BBS -> HTML converter')
 parser.add_argument('FN', metavar="filename", help="input file name")
+parser.add_argument('-p', '--print', action='store_true', dest='prt',
+                    help="Print to the screen as well")
 args = parser.parse_args()
 fn = args.FN
 with open(fn, 'r') as fh:
@@ -109,6 +111,8 @@ with open(fn, 'r') as fh:
 with open('tmp.html', 'w') as fh:
     for line in content:
         line = line.decode("big5").encode("UTF-8")
+        if args.prt:
+            print line
         line = line.replace(" ", "&nbsp;")
         result = pattern['uni'].findall(line)
         if result:

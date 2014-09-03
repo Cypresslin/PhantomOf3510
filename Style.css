@@ -11,12 +11,7 @@
     min-width: 600px;
     max-width: 1200px;
     font-size: 24px;
-/*    font-family: "細明體", "AR PL UMing TW", "Inconsolata", "LiSongPro", monospace;*/
     font-family: "文泉驛等寬正黑", "AR PL UMING TW", "細明體", "mingliu", "Courier", "monospace"; 
-}
-
-.ansi_group {
-    white-space: normal;
 }
 
 /* Color setting - foreground*/
