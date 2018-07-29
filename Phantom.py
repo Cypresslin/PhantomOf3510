@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ''' Phantom of 35.10, BBS -> HTML converter, in honor of ATMBBS
     140.115.35.10, BBS for bone-ash people
            This program is distributed under GNU GPLv2.
@@ -35,12 +35,12 @@ lookup = {30: 'c30',
 
 # pattern for regex, defined here to avoid re-compiling waste
 pattern = {
-    'uni': re.compile('\033\[[\d;]*m'),  # Universal color code
-    'fg': re.compile('(?<!\d)3\d'),      # Foreground color
-    'bg': re.compile('(?<!\d)4\d'),      # Background color
-    'ul': re.compile('[\[;m]4[\[;m]'),   # Underline
-    'hl': re.compile('[\[;m]1[\[;m]'),   # Highlight
-    'dk': re.compile('[\[;m]0[\[;m]')}   # Darken
+    'uni': re.compile(b'\033\[[\d;]*m'),  # Universal color code
+    'fg': re.compile(b'(?<!\d)3\d'),      # Foreground color
+    'bg': re.compile(b'(?<!\d)4\d'),      # Background color
+    'ul': re.compile(b'[\[;m]4[\[;m]'),   # Underline
+    'hl': re.compile(b'[\[;m]1[\[;m]'),   # Highlight
+    'dk': re.compile(b'[\[;m]0[\[;m]')}   # Darken
 
 
 HEADER = """
@@ -75,7 +75,7 @@ FOOTER = """
 def ctranslator(text):
     '''  activate translation'''
     # *[m close it
-    if '\033[m' == text:
+    if b'\033[m' == text:
         return '</span>'
     css_class = ""
     # Dealing with foreground color
@@ -89,7 +89,7 @@ def ctranslator(text):
     elif pattern['dk'].search(text) and not fgcolor: # darken only
         css_class += 'c30'
     elif fgcolor:  # not highlighted
-        css_class += lookup[fgcolor]
+        css_class += lookup[int(fgcolor.group(0))]
     # Dealing with underline
     if pattern['ul'].search(text):
         css_class += 'ul '
@@ -100,7 +100,12 @@ def ctranslator(text):
     return '<span class="{0}">'.format(css_class)
 
 
-HTML = ""
+def html_converter(linein):
+    output = linein.replace(' ', '&nbsp;')
+    return output
+
+
+BODY = ""
 parser = argparse.ArgumentParser(description=
                                  'Phantom of 35.10, BBS -> HTML converter')
 parser.add_argument('FN', metavar="filename", help="input file name")
@@ -108,23 +113,57 @@ parser.add_argument('-p', '--print', action='store_true', dest='prt',
                     help="Print to the screen as well")
 args = parser.parse_args()
 fn = args.FN
-with open(fn, 'r') as fh:
+with open(fn, 'rb') as fh:
     content = fh.readlines()
 
+# Get rid of the runaway char here:
 with open('tmp.html', 'w') as fh:
     for line in content:
-        line = line.decode("big5").encode("UTF-8")
+        try:
+            # Try to convert big5 encoded line first
+            # It will be treated as byte string if it can't be translated
+            line = line.decode('big5')
+        except UnicodeDecodeError:
+            result = set(pattern['uni'].findall(line))
+            if result:
+                for patt in result:
+                    code = ctranslator(patt).encode('big5')
+                    line = line.replace(patt, code)
+            import pdb;pdb.set_trace()
+            # First attempt to decode colorized line
+            try:
+                line = line.decode('big5')
+            except UnicodeDecodeError:
+                # There is expected to be a runaway \xa1 in the signature
+                # Two-colored word shall trigger this exception too
+                # FIXME: ungly hack
+                if b'\xa1<span class="c40">\xb4' in line:
+                    line = line.replace(b'\xa1<span class="c40">\xb4', b'\xa1\xb4')
+                if b'<span class="c30">\xa1<span class="c46">? <' in line:
+                    # FIXME: dual color case
+                    line = line.replace(b'<span class="c30">\xa1<span class="c46">? <',
+                                        b'<span class="c30"><span class="c46">? <')
+                if b'<span class="c30">\xa2<span class="c37">\xa8' in line:
+                    # FIXME: dual color case
+                    line = line.replace(b'<span class="c30">\xa2<span class="c37">\xa8',
+                                        b'<span class="c37">\xa2\xa8')
+                if b'<span class="c30c40">\xa2<span class="c37">\xab\xa2<span class="c30">\xaa\xa2<span class="c37c47">\xaa' in line:
+                    # FIXME: dual color case
+                    line = line.replace(b'<span class="c30c40">\xa2<span class="c37">\xab', b'<span class="c30c40">\xa2\xab<span class="c37">')
+                if b'<span class="c37">\xa2<span class="c30">\xaa' in line:
+                    # FIXME: dual color issue
+                    line = line.replace(b'<span class="c37">\xa2<span class="c30">\xaa', b'<span class="c37">\xa2\xaa<span class="c30">')
+                if b'<span class="c30">\xa2<span class="c37c47">\xaa' in line:
+                    # FIXME: dual color issue
+                    line = line.replace(b'<span class="c30">\xa2<span class="c37c47">\xaa', b'<span class="c30">\xa2\xaa<span class="c37c47">')
+
+            line = line.decode('big5')
+
         if args.prt:
-            print line
-        line = line.replace(" ", "&nbsp;")
-        result = pattern['uni'].findall(line)
-        if result:
-            for patt in result:
-                code = ctranslator(patt)
-                line = line.replace(patt, code)
-        HTML += line[:len(line)-1] + '<br>\n'
+            print(line)
+        BODY += html_converter(line[:len(line)-1]) + '<br>'
     fh.write(HEADER)
-    fh.write(HTML)
+    fh.write(BODY)
     fh.write(FOOTER)
 
-print "JOB CMPL, tmp.html saved"
+print("JOB CMPL, tmp.html saved")
