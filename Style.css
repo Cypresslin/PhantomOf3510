@@ -1,4 +1,46 @@
 /* Main page */
+#main-container {
+	margin: 0;
+	padding: 0 0 3ex 0;
+	position: relative;
+}
+
+#main-content {
+	position: relative;
+	white-space: pre-wrap;
+}
+
+.bbs-screen {
+    color: #bbb;
+    background-color: #000;
+ /*   line-height: 100%;*/
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+}
+
+.bbs-content {
+	font-family: "細明體", "AR PL UMing TW", "Inconsolata", "LiSongPro", monospace;
+}
+
+.article-metaline {
+	margin: 0;
+	padding: 10;
+	background-color: #008;
+}
+.article-meta-tag {
+	padding: 0 1ex;
+	background-color: #999;
+	color: #008;
+}
+.article-meta-value {
+	padding: 0 1ex;
+	background-color: #008;
+	color: #999;
+}
+
 .content {
     color: rgb(187,187,187);
     background-color: rgb(  0,  0,  0);
@@ -9,9 +51,9 @@
     margin: 0 auto;
     padding: 0 0 3ex 0;
     min-width: 600px;
-    max-width: 1200px;
+    max-width: 1100px;
     font-size: 24px;
-    font-family: "文泉驛等寬正黑", "AR PL UMING TW", "細明體", "mingliu", "Courier", "monospace"; 
+    font-family: "文泉驛等寬正黑", "AR PL UMING TW", "細明體", "mingliu", "Courier", "monospace";
 }
 
 /* Color setting - foreground*/
